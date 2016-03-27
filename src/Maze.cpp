@@ -35,8 +35,43 @@ more parameters .
 
 #include<stdlib.h>
 
-
+void get_path_recursive(int *maze, int rows, int columns, int x1, int y1, int x2, int y2, bool *path_exist)
+{
+	if (x1 == x2 && y1 == y2 && maze[x1*columns + y1] == 1)
+		(*path_exist) = true;
+	else
+	{
+		if (x1 - 1 >= 0 && maze[((x1 - 1)*columns) + y1] == 1)
+		{
+			maze[x1*columns + y1] = 0;
+			get_path_recursive(maze, rows, columns, x1 - 1, y1, x2, y2, path_exist);
+			maze[x1*columns + y1] = 1;
+		}
+		if (x1 + 1 < rows && maze[(x1 + 1)*columns + y1] == 1)
+		{
+			maze[x1*columns + y1] = 0;
+			get_path_recursive(maze, rows, columns, x1 + 1, y1, x2, y2, path_exist);
+			maze[x1*columns + y1] = 1;
+		}
+		if (y1 - 1 >= 0 && maze[x1*columns + (y1 - 1)] == 1)
+		{
+			maze[x1*columns + y1] = 0;
+			get_path_recursive(maze, rows, columns, x1, y1 - 1, x2, y2, path_exist);
+			maze[x1*columns + y1] = 1;
+		}
+		if (y1 + 1 < columns && maze[x1*columns + (y1 + 1)] == 1)
+		{
+			maze[x1*columns + y1] = 0;
+			get_path_recursive(maze, rows, columns, x1, y1 + 1, x2, y2, path_exist);
+			maze[x1*columns + y1] = 1;
+		}
+	}
+}
 int path_exists(int *maze, int rows, int columns, int x1, int y1, int x2, int y2)
 {
-	return 1;
+	bool path_exist = false;
+	get_path_recursive(maze, rows, columns, x1, y1, x2, y2, &path_exist);
+	if (path_exist)
+		return 1;
+	else return 0;
 }
